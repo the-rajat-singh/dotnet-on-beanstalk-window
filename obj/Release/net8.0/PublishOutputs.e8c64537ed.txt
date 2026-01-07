@@ -1,0 +1,8 @@
+/root/NotesApp/publish/NotesApp
+/root/NotesApp/publish/web.config
+/root/NotesApp/publish/appsettings.Development.json
+/root/NotesApp/publish/appsettings.json
+/root/NotesApp/publish/NotesApp.dll
+/root/NotesApp/publish/NotesApp.deps.json
+/root/NotesApp/publish/NotesApp.runtimeconfig.json
+/root/NotesApp/publish/NotesApp.pdb
