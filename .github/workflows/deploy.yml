@@ -1,31 +1,44 @@
-name: Deploy Notes App to Elastic Beanstalk (Windows)
+name: Deploy .NET Notes App to Elastic Beanstalk (Windows)
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest   # ✅ GitHub-hosted runner
 
     steps:
-      - name: Checkout code
+      # 1️⃣ Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Publish app
-        run: |
-          dotnet publish -c Release -o publish
+      # 3️⃣ Restore dependencies
+      - name: Restore
+        run: dotnet restore
 
-      - name: Zip artifact
+      # 4️⃣ Build
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      # 5️⃣ Publish (MANDATORY for Beanstalk)
+      - name: Publish
+        run: dotnet publish -c Release -o publish
+
+      # 6️⃣ Zip published output
+      - name: Create ZIP
         run: |
           cd publish
-          zip -r ../app.zip .
+          zip -r ../notesapp.zip .
 
+      # 7️⃣ Deploy to Elastic Beanstalk
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -34,6 +47,6 @@ jobs:
           application_name: notes-app
           environment_name: notes-env
           region: ap-south-1
-          version_label: notes-${{ github.sha }}-${{ github.run_number }}1
-          deployment_package: app.zip
-
+          version_label: notes-${{ github.run_id }}
+          deployment_package: notesapp.zip
+          use_existing_version_if_available: true
