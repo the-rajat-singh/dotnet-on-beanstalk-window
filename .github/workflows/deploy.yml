@@ -47,6 +47,6 @@ jobs:
           application_name: notes-app
           environment_name: notes-env
           region: ap-south-1
-          version_label: notes-${{ github.run_id }}1
+          version_label: notes-${{ github.run_id }}
           deployment_package: notesapp.zip
           use_existing_version_if_available: true
